@@ -1,15 +1,18 @@
 package com.egstestmyquizi.demo.model.persistence;
 
+
 import javax.persistence.*;
 
 
 @Entity
 @Table
+
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
 
     @Column
     private String userName;
@@ -32,11 +35,12 @@ public class User {
     @Column
     Integer points = 0;
 
+    @Column
+    String token;
 
- 
     @Column
     @Enumerated(EnumType.STRING)
-    private UserType type = UserType.USER;
+    private Role role;
 
 
     public User() {
@@ -49,22 +53,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.isEnable = isEnable;
-    }
-
-    public boolean isEnable() {
-        return isEnable;
-    }
-
-    public void setEnable(boolean enable) {
-        isEnable = enable;
-    }
-
-    public Integer getPoints() {
-        return points;
-    }
-
-    public void setPoints(Integer points) {
-        this.points = points;
+        this.role = Role.valueOf("USER");
     }
 
     public int getId() {
@@ -73,6 +62,14 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getName() {
@@ -107,7 +104,7 @@ public class User {
         this.password = password;
     }
 
-    public boolean getIsEnable() {
+    public boolean isIsEnable() {
         return isEnable;
     }
 
@@ -115,19 +112,27 @@ public class User {
         isEnable = enable;
     }
 
-    public UserType getType() {
-        return type;
+    public Integer getPoints() {
+        return points;
     }
 
-    public void setType(UserType type) {
-        this.type = type;
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getToken() {
+        return token;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getRole() {
+        return "USER";
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

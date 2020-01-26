@@ -23,8 +23,14 @@ public interface UserService {
 
     void updateSurName(String userName, String sueName);
 
-    void updatePassword(String userName, String password);
+    void updatePassword(String userName, String newPassword);
 
     void updateEnable(String userName, boolean isEnable);
+
+    boolean checkUserByUserNameAndPassword(String userName, String password);
+
+    String loginByUserNameAndPassword(String userName, String password);
+
+    void updateUserToken(String userName, String token);
 
 }

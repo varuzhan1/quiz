@@ -8,6 +8,7 @@ import com.egstestmyquizi.demo.service.api.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,35 +25,38 @@ public class QuestionController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/question/add")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void questionAdd(@RequestBody Test test) {
         questionService.saveWithAnswer(test.getQuestion(), test.getAnswers());
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/questions")
-    public List<Question> findAll() {
+    public List<Question> findAllQuestion() {
         return questionService.findAll();
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("question/update")
+    @PutMapping("/question/update")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateQuestionById(@RequestParam("id") Integer id, @RequestParam("text") String text) {
         questionService.updateQuestionById(id, text);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("question/delete")
+    @DeleteMapping("/question/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteQuestionById(@RequestParam("id") Integer id) {
         questionService.deleteQuestionById(id);
     }
 
     @GetMapping("/question/{id}")
-    public Question findAllByQuestion(@PathVariable("id") Integer id) {
+    public Question findAllById(@PathVariable("id") Integer id) {
         return questionService.findById(id);
     }
 
     @GetMapping("/question/category")
-    public List<Question> getQuestionByCategory(@RequestParam("category") String category) {
+    public List<Question> findQuestionByCategory(@RequestParam("category") String category) {
         return questionService.findByCategory(category);
     }
 
