@@ -7,5 +7,6 @@ import java.util.List;
 public interface AnswerService {
 
     void saveAllAnswers(List<Answer> answers) ;
+    void addAnswer(Answer answer);
 
 }

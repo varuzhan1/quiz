@@ -22,8 +22,6 @@ public class Question {
 
     @OneToMany(  cascade = CascadeType.ALL,
             orphanRemoval = true)
-//    @JoinColumn(name = "question_id")
-//    @OnDelete(action = OnDeleteAction.CASCADE)
     private   List<Answer> answers;
 
     public Question() {

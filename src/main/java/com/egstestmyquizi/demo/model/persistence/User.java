@@ -33,10 +33,10 @@ public class User {
     private boolean isEnable;
 
     @Column
-    Integer points = 0;
+    private Integer points = 0;
 
     @Column
-    String token;
+    private String token;
 
     @Column
     @Enumerated(EnumType.STRING)

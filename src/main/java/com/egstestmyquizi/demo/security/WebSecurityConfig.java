@@ -13,8 +13,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -35,7 +33,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        super.configure(http);
         http.csrf().disable().authorizeRequests().anyRequest().permitAll();
         http.addFilterBefore(restAuthenticationFilter(), AnonymousAuthenticationFilter.class);
     }
@@ -50,10 +47,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     AuthorizationFilter restAuthenticationFilter() throws Exception {
         AuthorizationFilter filter = new AuthorizationFilter(new AntPathRequestMatcher("/users", "GET"));
         filter.addRequestMatcher(new AntPathRequestMatcher("/question/add", "POST"));
-        filter.addRequestMatcher(new AntPathRequestMatcher("questions", "GET"));
         filter.addRequestMatcher(new AntPathRequestMatcher("/question/update", "POST"));
         filter.addRequestMatcher(new AntPathRequestMatcher("question/delete", "DELETE"));
         filter.addRequestMatcher(new AntPathRequestMatcher("/user/delete/{id}", "DELETE"));
+        filter.addRequestMatcher(new AntPathRequestMatcher("/answer/add", "PUT"));
         filter.addRequestMatcher(new AntPathRequestMatcher("/users", "GET"));
         filter.addRequestMatcher(new AntPathRequestMatcher("/user/update/name", "PUT"));
         filter.addRequestMatcher(new AntPathRequestMatcher("/user/update/email", "PUT"));

@@ -54,7 +54,6 @@ public class AuthorizationFilter extends AbstractAuthenticationProcessingFilter 
         return getAuthenticationManager().authenticate(userAuthenticationToken);
     }
 
-
     public void addRequestMatcher(RequestMatcher requestMatcher) {
         requestMatchers.add(requestMatcher);
     }

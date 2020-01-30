@@ -1,7 +1,8 @@
 package com.egstestmyquizi.demo.controller;
 
 
-import com.egstestmyquizi.demo.model.business.Test;
+import com.egstestmyquizi.demo.model.business.Quiz;
+import com.egstestmyquizi.demo.model.persistence.Answer;
 import com.egstestmyquizi.demo.model.persistence.Question;
 import com.egstestmyquizi.demo.service.api.AnswerService;
 import com.egstestmyquizi.demo.service.api.QuestionService;
@@ -26,8 +27,8 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/question/add")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void questionAdd(@RequestBody Test test) {
-        questionService.saveWithAnswer(test.getQuestion(), test.getAnswers());
+    public void questionAdd(@RequestBody Quiz quiz) {
+        questionService.saveWithAnswer(quiz.getQuestion(), quiz.getAnswers());
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -51,7 +52,7 @@ public class QuestionController {
     }
 
     @GetMapping("/question/{id}")
-    public Question findAllById(@PathVariable("id") Integer id) {
+    public Question findById(@PathVariable("id") Integer id) {
         return questionService.findById(id);
     }
 
@@ -64,5 +65,12 @@ public class QuestionController {
     @GetMapping("/question/page")
     public Page<Question> questionFindByPage(@RequestParam("page") Integer page, @RequestParam("size") Integer size) {
         return questionService.findByPage(page, size);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/answer/add")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public  void addAnswer(@RequestBody Answer answer){
+      answerService.addAnswer(answer);
     }
 }

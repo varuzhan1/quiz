@@ -1,6 +1,7 @@
 package com.egstestmyquizi.demo.service.api;
 
 
+import com.egstestmyquizi.demo.model.business.LeaderBoard;
 import com.egstestmyquizi.demo.model.persistence.User;
 
 import java.util.List;
@@ -33,4 +34,5 @@ public interface UserService {
 
     void updateUserToken(String userName, String token);
 
+    List<LeaderBoard> leaderBoard();
 }

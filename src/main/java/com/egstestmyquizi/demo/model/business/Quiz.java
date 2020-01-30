@@ -6,7 +6,7 @@ import com.egstestmyquizi.demo.model.persistence.Question;
 
 import java.util.List;
 
-public class Test {
+public class Quiz {
 
     private Question question;
 

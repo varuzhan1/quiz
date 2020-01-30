@@ -1,16 +1,20 @@
 package com.egstestmyquizi.demo.service.impl;
 
-;
 import com.egstestmyquizi.demo.exception.UnAuthorizedException;
 import com.egstestmyquizi.demo.exception.UserRegistrationException;
+
+import com.egstestmyquizi.demo.model.business.LeaderBoard;
 import com.egstestmyquizi.demo.model.persistence.User;
 import com.egstestmyquizi.demo.repository.UserRepository;
 import com.egstestmyquizi.demo.service.api.UserService;
 import com.egstestmyquizi.demo.util.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -39,6 +43,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public List<LeaderBoard> leaderBoard() {
+         List<LeaderBoard> leaderBoard = userRepository.findAllBy(Sort.by(Sort.Direction.DESC, "points"));
+        return leaderBoard;
+    }
 
     @Override
     public void save(User user) throws UserRegistrationException {

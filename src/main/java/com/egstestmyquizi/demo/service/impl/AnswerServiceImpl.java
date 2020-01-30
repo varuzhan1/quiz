@@ -24,5 +24,10 @@ public class AnswerServiceImpl implements AnswerService {
         answerRepository.saveAll(answers);
     }
 
+    @Override
+    public void addAnswer(Answer answer) {
+         answerRepository.save(answer);
+    }
+
 
 }
