@@ -1,28 +1,27 @@
 package com.egstestmyquizi.demo.model.persistence;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.egstestmyquizi.demo.model.persistence.Answer;
+import com.egstestmyquizi.demo.model.persistence.Question;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
-@Table(name = "answer")
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Answer {
+@Entity
+@Table(name = "quiz")
+public class Quiz {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column
-    String text;
+    @OneToMany(mappedBy = "quiz")
+    private List<Question> questions;
 
-    @ManyToOne
-    @JsonIgnore
-    Question question;
 }

@@ -1,21 +1,20 @@
 package com.egstestmyquizi.demo.service.impl;
 
-import com.egstestmyquizi.demo.exception.UnAuthorizedException;
+import com.egstestmyquizi.demo.exception.EmptyUsersException;
+import com.egstestmyquizi.demo.exception.UserNotFoundException;
 import com.egstestmyquizi.demo.exception.UserRegistrationException;
 
-import com.egstestmyquizi.demo.model.business.LeaderBoard;
+import com.egstestmyquizi.demo.model.dto.LeaderBoard;
 import com.egstestmyquizi.demo.model.persistence.User;
 import com.egstestmyquizi.demo.repository.UserRepository;
 import com.egstestmyquizi.demo.service.api.UserService;
-import com.egstestmyquizi.demo.util.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,104 +22,117 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
     @Override
-    public String loginByUserNameAndPassword(String userName, String password) {
-        if (checkUserByUserNameAndPassword(userName, password)) {
-            String token = Encrypt.encodeAccount(userName,password);
-            updateUserToken(userName, token);
-            return token;
-        }
-        throw new UnAuthorizedException("login or password is not correct");
-    }
-
-    @Override
-    public void updateUserToken(String userName, String token) {
-        User user = userRepository.findUserByUserName(userName);
-        user.setToken(token);
-        userRepository.save(user);
-    }
-
-    @Override
-    public List<LeaderBoard> leaderBoard() {
-         List<LeaderBoard> leaderBoard = userRepository.findAllBy(Sort.by(Sort.Direction.DESC, "points"));
-        return leaderBoard;
-    }
-
-    @Override
-    public void save(User user) throws UserRegistrationException {
-        User findByUserName = findByUserName(user.getUserName());
-        if (findByUserName == null) {
-            userRepository.save(user);
+    @Transactional
+    public void save(User newUser) throws Exception {
+        User user = userRepository.findByEmail(newUser.getEmail()).get();
+        if (user == null && newUser.getPassword() != null && newUser.getName() != null && newUser.getSurName() != null) {
+            userRepository.save(newUser);
         } else {
-            throw new UserRegistrationException("That username is taken. Try another");
+            throw new UserRegistrationException("User already created or missing some fields. Try again");
         }
-
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    @Transactional
+    public List<User> findAll() throws EmptyUsersException {
+       List<User> users = userRepository.findAll();
+       if (users.isEmpty()){
+           throw new EmptyUsersException("There is no users!");
+       }
+       return users;
     }
 
     @Override
-    public User findById(Integer id) {
-        return userRepository.findById(id).get();
+    @Transactional
+    public Optional<User> findById(Integer id) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if(!user.isPresent()){
+            throw new UserNotFoundException("User not found");
+        }
+        return userRepository.findById(id);
     }
 
     @Override
-    public User findByUserName(String name) {
-        return userRepository.findUserByUserName(name);
+    @Transactional
+    public User findByEmail(String email) throws UserNotFoundException {
+        User user = userRepository.findByEmail(email).get();
+        if(user == null){
+            throw new UserNotFoundException("User not found");
+        }
+        return user;
     }
 
     @Override
-    public void deleteUserById(Integer id) {
+    @Transactional
+    public void deleteById(Integer id) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if(!user.isPresent()){
+            throw new UserNotFoundException("User not found");
+        }
         userRepository.deleteById(id);
     }
 
     @Override
-    public void updateEmail(String userName, String email) {
-        User user = userRepository.findUserByUserName(userName);
-        user.setEmail(email);
-        userRepository.save(user);
-    }
-
-    @Override
-    public void updateName(String userName, String name) {
-        User user = userRepository.findUserByUserName(userName);
-        user.setName(name);
-        userRepository.save(user);
-    }
-
-    @Override
-    public void updateSurName(String userName, String sueName) {
-        User user = userRepository.findUserByUserName(userName);
-        user.setSurName(sueName);
-        userRepository.save(user);
-    }
-
-    @Override
-    public void updatePassword(String userName, String newPassword) {
-        User user = userRepository.findUserByUserName(userName);
-        user.setPassword(newPassword);
-        userRepository.save(user);
-    }
-
-    @Override
-    public void updateEnable(String userName, boolean isEnable) {
-        User user = userRepository.findUserByUserName(userName);
-        user.setIsEnable(isEnable);
-        userRepository.save(user);
-    }
-
-    @Override
-    public boolean checkUserByUserNameAndPassword(String userName, String password) {
-        User user = userRepository.findUserByUserName(userName);
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            return true;
+    @Transactional
+    public void updateEmail(Integer id, String newEmail) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if(!user.isPresent()){
+            throw new UserNotFoundException("User not found");
         }
+        user.get().setEmail(newEmail);
+    }
+
+    @Override
+    @Transactional
+    public void updateSurName(Integer id, String surName) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if(!user.isPresent()){
+            throw new UserNotFoundException("User not found");
+        }
+        user.get().setSurName(surName);
+    }
+
+    @Override
+    public void updatePassword(Integer id, String newPassword) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if(!user.isPresent()){
+            throw new UserNotFoundException("User not found");
+        }
+        user.get().setPassword(newPassword);
+    }
+
+    @Override
+    public boolean checkUserByIdAndPassword(Integer id, String password) {
         return false;
     }
+
+    @Override
+    public String loginByEmailAndPassword(String email, String password) {
+        return null;
+    }
+
+    @Override
+    public List<LeaderBoard> leaderBoard() {
+        List<LeaderBoard> leaderBoard = userRepository.findAllBy(Sort.by(Sort.Direction.DESC, "points"));
+        return leaderBoard;
+    }
+
+//    @Override
+//    public String loginByEmailAndPassword(String email, String password) {
+//        if (checkUserByUserNameAndPassword(email, password)) {
+//            return null;
+//        }
+//        throw new UnAuthorizedException("login or password is not correct");
+//    }
+
+
+//    @Override
+//    public boolean checkUserByUserNameAndPassword(String userName, String password) {
+//        User user = userRepository.findUserByUserName(userName);
+//        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+//            return true;
+//        }
+//        return false;
+//    }
 }

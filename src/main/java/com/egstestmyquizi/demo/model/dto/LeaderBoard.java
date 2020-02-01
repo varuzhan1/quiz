@@ -1,4 +1,4 @@
-package com.egstestmyquizi.demo.model.business;
+package com.egstestmyquizi.demo.model.dto;
 
 public interface LeaderBoard {
 

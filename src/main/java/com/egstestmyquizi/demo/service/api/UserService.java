@@ -1,38 +1,39 @@
 package com.egstestmyquizi.demo.service.api;
 
 
-import com.egstestmyquizi.demo.model.business.LeaderBoard;
+import com.egstestmyquizi.demo.exception.EmptyUsersException;
+import com.egstestmyquizi.demo.exception.UserNotFoundException;
+import com.egstestmyquizi.demo.model.dto.LeaderBoard;
 import com.egstestmyquizi.demo.model.persistence.User;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 
 public interface UserService {
 
     void save(User user) throws Exception;
 
-    List<User> findAll();
+    List<User> findAll() throws EmptyUsersException;
 
-    User findById(Integer id);
+    Optional<User> findById(Integer id) throws UserNotFoundException;
 
-    User findByUserName(String userName);
+    User findByEmail(String email) throws UserNotFoundException;
 
-    void deleteUserById(Integer id);
+    void deleteById(Integer id) throws UserNotFoundException;
 
-    void updateEmail(String userName, String email);
+    void updateEmail(Integer id, String newEmail) throws UserNotFoundException;
 
-    void updateName(String userName, String name);
 
-    void updateSurName(String userName, String sueName);
+    void updateSurName(Integer id, String surName) throws UserNotFoundException;
 
-    void updatePassword(String userName, String newPassword);
+    void updatePassword(Integer id, String newPassword) throws UserNotFoundException;
 
-    void updateEnable(String userName, boolean isEnable);
 
-    boolean checkUserByUserNameAndPassword(String userName, String password);
+    boolean checkUserByIdAndPassword(Integer id, String password);
 
-    String loginByUserNameAndPassword(String userName, String password);
-
-    void updateUserToken(String userName, String token);
+    String loginByEmailAndPassword(String email, String password);
 
     List<LeaderBoard> leaderBoard();
 }

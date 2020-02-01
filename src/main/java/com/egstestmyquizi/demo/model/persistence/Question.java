@@ -1,75 +1,37 @@
 package com.egstestmyquizi.demo.model.persistence;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table
+@Table(name = "question")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column
-    private String question;
+    private String text;
 
     @Column
     private int point;
 
-    @Column
-    private String category;
-
-    @OneToMany(  cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(mappedBy = "question")
+//    @JsonIgnore
     private   List<Answer> answers;
 
-    public Question() {
-    }
+    @OneToOne
+    private Answer correctAnswer;
 
-    public List<Answer> getAnswers() {
-        return answers;
-    }
-
-    public void setAnswers(List<Answer> answers) {
-        this.answers = answers;
-    }
-
-    public Question(String category, int point, String question){
-        this.category = category;
-        this.point = point;
-        this.question = question;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
-    public int getPoint() {
-        return point;
-    }
-
-    public void setPoint(int point) {
-        this.point = point;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
+    @ManyToOne
+    private Quiz quiz;
 }

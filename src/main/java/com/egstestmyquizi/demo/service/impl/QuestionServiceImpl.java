@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -25,8 +25,8 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     @Transactional
     public Question saveQuestion(Question question) {
-        Question question1 = questionRepository.save(question);
-        return question1;
+        Question questionWithId = questionRepository.save(question);
+        return questionWithId;
     }
 
     @Override
@@ -34,39 +34,39 @@ public class QuestionServiceImpl implements QuestionService {
     public void saveWithAnswer(Question question, List<Answer> answers) {
         Question questionWithId = saveQuestion(question);
         answers.forEach(item -> item.setQuestion(questionWithId));
-        answerService.saveAllAnswers(answers);
+        answerService.saveAll(answers);
     }
 
-
     @Override
+    @Transactional
     public List<Question> findAll() {
+
         return questionRepository.findAll();
     }
 
     @Override
+    @Transactional
     public Question findById(Integer id) {
         return questionRepository.findById(id).get();
     }
 
     @Override
+    @Transactional
     public Page<Question> findByPage(Integer page, Integer size) {
         return questionRepository.findAll(PageRequest.of(page, size));
     }
 
     @Override
-    public void updateQuestionById(Integer id, String text) {
+    @Transactional
+    public void updateById(Integer id, String text) {
         Question question = questionRepository.findById(id).get();
-        question.setQuestion(text);
+        question.setText(text);
         questionRepository.save(question);
     }
 
     @Override
-    public void deleteQuestionById(Integer id) {
+    @Transactional
+    public void deleteById(Integer id) {
         questionRepository.deleteById(id);
-    }
-
-    @Override
-    public List<Question> findByCategory(String category) {
-        return questionRepository.findAllByCategory(category);
     }
 }
