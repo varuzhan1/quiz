@@ -60,7 +60,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Transactional
     public void updateById(Integer id, String text) {
         Question question = questionRepository.findById(id).get();
-        question.setText(text);
+        question.setQuestion(text);
         questionRepository.save(question);
     }
 

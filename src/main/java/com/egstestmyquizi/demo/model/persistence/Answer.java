@@ -20,7 +20,7 @@ public class Answer {
     private Integer id;
 
     @Column
-    String text;
+    String answer;
 
     @ManyToOne
     @JsonIgnore

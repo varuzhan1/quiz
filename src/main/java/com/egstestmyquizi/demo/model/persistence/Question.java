@@ -20,7 +20,7 @@ public class Question {
     private Integer id;
 
     @Column
-    private String text;
+    private String question;
 
     @Column
     private int point;
