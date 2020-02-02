@@ -1,6 +1,5 @@
 package com.egstestmyquizi.demo.model.persistence;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,15 +22,12 @@ public class Question {
     private String question;
 
     @Column
-    private int point;
+    private Integer point;
 
-    @OneToMany(mappedBy = "question")
-//    @JsonIgnore
+    @OneToMany
     private   List<Answer> answers;
 
     @OneToOne
     private Answer correctAnswer;
 
-    @ManyToOne
-    private Quiz quiz;
 }

@@ -3,6 +3,7 @@ package com.egstestmyquizi.demo.service.api;
 
 import com.egstestmyquizi.demo.exception.EmptyUsersException;
 import com.egstestmyquizi.demo.exception.UserNotFoundException;
+import com.egstestmyquizi.demo.exception.UserRegistrationException;
 import com.egstestmyquizi.demo.model.dto.LeaderBoard;
 import com.egstestmyquizi.demo.model.persistence.User;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    void save(User user) throws Exception;
+    void save(User user) throws UserRegistrationException;
 
     List<User> findAll() throws EmptyUsersException;
 

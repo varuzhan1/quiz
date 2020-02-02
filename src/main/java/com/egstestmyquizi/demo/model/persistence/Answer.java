@@ -22,7 +22,4 @@ public class Answer {
     @Column
     String answer;
 
-    @ManyToOne
-    @JsonIgnore
-    Question question;
 }

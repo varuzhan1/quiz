@@ -1,36 +1,47 @@
 package com.egstestmyquizi.demo.controller;
 
 
+import com.egstestmyquizi.demo.exception.UserRegistrationException;
+import com.egstestmyquizi.demo.model.persistence.User;
+import com.egstestmyquizi.demo.security.JwtTokenUtil;
+import com.egstestmyquizi.demo.service.api.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
-//    @Autowired
-//   // UserService userService;
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+     private JwtTokenUtil jwtTokenUtil;
+
+
 //
 //    @PostMapping("/login")
 //    @ResponseStatus(HttpStatus.ACCEPTED)
-//    @ResponseBody
+//
 //    public Map<String, String> login(@RequestBody Map<String, String> values) {
 //        Map<String, String> accessToken = new HashMap<>();
 //        accessToken.put("access_token", userService.loginByUserNameAndPassword(
 //                values.get("userName"), values.get("password")));
 //        return accessToken;
 //    }
-//
-//    @SneakyThrows
-//    @PostMapping("/register")
-//    public HttpStatus register(@RequestBody User user) {
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        try {
-//            userService.save(user);
-//        } catch (UserRegistrationException e) {
-//            throw new UserRegistrationException();
-//        }
-//        return HttpStatus.OK;
-//    }
-//
+
+
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.OK)
+    public void register(@RequestBody User user) throws UserRegistrationException {
+        userService.save(user);
+    }
+
 //
 //    @ResponseStatus(HttpStatus.OK)
 //    @GetMapping("/users")

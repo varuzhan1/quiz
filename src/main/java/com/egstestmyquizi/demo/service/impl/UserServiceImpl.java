@@ -10,6 +10,7 @@ import com.egstestmyquizi.demo.repository.UserRepository;
 import com.egstestmyquizi.demo.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,14 +23,18 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Override
     @Transactional
-    public void save(User newUser) throws Exception {
-        User user = userRepository.findByEmail(newUser.getEmail()).get();
+    public void save(User newUser) throws UserRegistrationException {
+        User user = userRepository.findByEmail(newUser.getEmail());
         if (user == null && newUser.getPassword() != null && newUser.getName() != null && newUser.getSurName() != null) {
+            newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
             userRepository.save(newUser);
         } else {
-            throw new UserRegistrationException("User already created or missing some fields. Try again");
+            throw new UserRegistrationException("User already created or you have missing some field");
         }
     }
 
@@ -56,7 +61,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User findByEmail(String email) throws UserNotFoundException {
-        User user = userRepository.findByEmail(email).get();
+        User user = userRepository.findByEmail(email);
         if(user == null){
             throw new UserNotFoundException("User not found");
         }

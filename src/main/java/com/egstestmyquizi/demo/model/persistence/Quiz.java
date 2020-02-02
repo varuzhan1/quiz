@@ -6,6 +6,7 @@ import com.egstestmyquizi.demo.model.persistence.Question;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
 
 import javax.persistence.*;
 import java.util.List;
@@ -21,7 +22,10 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(mappedBy = "quiz")
+    @Column
+    private String name;
+
+    @OneToMany
     private List<Question> questions;
 
 }

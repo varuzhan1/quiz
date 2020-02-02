@@ -28,7 +28,13 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     @Transactional
-    public List<Answer> findAllByQuestionId(int questionId) {
-        return answerRepository.findAllByQuestionId(questionId);
+    public void deleteById(Integer id){
+        answerRepository.deleteById(id);
     }
+
+//    @Override
+//    @Transactional
+//    public List<Answer> findAllByQuestionId(int questionId) {
+//        return answerRepository.findAllByQuestionId(questionId);
+//    }
 }

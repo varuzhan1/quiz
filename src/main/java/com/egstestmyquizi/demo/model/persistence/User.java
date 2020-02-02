@@ -35,9 +35,6 @@ public class User {
     private Integer points = 0;
 
     @Column
-    private String token;
-
-    @Column
     @Enumerated(EnumType.STRING)
     private Role role = Role.valueOf("ADMIN");
 }

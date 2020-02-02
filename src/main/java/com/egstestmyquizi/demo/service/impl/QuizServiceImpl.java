@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class QuizServiceImpl implements QuizService {
     @Autowired
@@ -26,10 +27,15 @@ public class QuizServiceImpl implements QuizService {
     public void save(Quiz quiz) {
         Quiz quizWithId = quizRepository.save(quiz);
         List<Question> questions = quizWithId.getQuestions();
-        questions.forEach(item -> item.setQuiz(quizWithId));
-        for(int i = 0; i < questions.size(); i++){
-            questionService.saveWithAnswer(questions.get(i), questions.get(i).getAnswers());
+        for (int i = 0; i < questions.size(); i++) {
+            questionService.saveQuestion(questions.get(i));
         }
+
+    }
+    @Override
+    @Transactional
+    public void saveAfterDeleteQuestion(Quiz quiz) {
+    quizRepository.save(quiz);
 
     }
 
@@ -37,7 +43,7 @@ public class QuizServiceImpl implements QuizService {
     @Transactional
     public Optional<Quiz> findById(Integer id) throws QuizNotFoundException {
         Optional<Quiz> quiz = quizRepository.findById(id);
-        if(!quiz.isPresent()){
+        if (!quiz.isPresent()) {
             throw new QuizNotFoundException("Quiz not found");
         }
         return quiz;
@@ -46,7 +52,7 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public List<Quiz> findAll() throws QuizNotFoundException {
         List<Quiz> quizzes = quizRepository.findAll();
-        if (quizzes.isEmpty()){
+        if (quizzes.isEmpty()) {
             throw new QuizNotFoundException("Quizzes are not found");
         }
         return quizzes;
@@ -56,20 +62,32 @@ public class QuizServiceImpl implements QuizService {
     @Transactional
     public List<Question> getQuestionsByCount(Integer quizId, Integer countOfQuestions) throws QuizNotFoundException {
         Optional<Quiz> quiz = quizRepository.findById(quizId);
-        if (!quiz.isPresent()){
+        if (!quiz.isPresent()) {
             throw new QuizNotFoundException("Quiz not found");
         }
 
-        return quiz.get().getQuestions().subList(0,countOfQuestions);
+        return quiz.get().getQuestions().subList(0, countOfQuestions);
     }
 
     @Override
     @Transactional
     public void deleteById(Integer id) throws QuizNotFoundException {
         Optional<Quiz> quiz = quizRepository.findById(id);
-        if (!quiz.isPresent()){
+        if (!quiz.isPresent()) {
             throw new QuizNotFoundException("Quiz not found");
         }
-        quizRepository.deleteById(id);
+        quizRepository.delete(quiz.get());
+        for (int i = 0; i < quiz.get().getQuestions().size(); i++) {
+            questionService.deleteById(quiz.get().getQuestions().get(i).getId());
+        }
+    }
+
+    @Override
+    public void addQuestionByQuizId(Integer quizId, Question question) {
+        Optional<Quiz> quiz = quizRepository.findById(quizId);
+        List<Question> questions = quiz.get().getQuestions();
+        questions.add(question);
+        questionService.saveQuestion(question);
+
     }
 }

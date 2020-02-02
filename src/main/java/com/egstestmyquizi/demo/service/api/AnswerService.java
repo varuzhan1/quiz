@@ -9,6 +9,8 @@ public interface AnswerService {
 
     void saveAll(List<Answer> answers) ;
 
-    List<Answer> findAllByQuestionId(int questionId);
+    void deleteById(Integer id);
+
+   // List<Answer> findAllByQuestionId(int questionId);
 
 }

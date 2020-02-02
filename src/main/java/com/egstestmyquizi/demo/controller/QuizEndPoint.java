@@ -1,14 +1,14 @@
 package com.egstestmyquizi.demo.controller;
 
+import com.egstestmyquizi.demo.exception.QuizNotFoundException;
 import com.egstestmyquizi.demo.model.persistence.Quiz;
-import com.egstestmyquizi.demo.repository.QuestionRepository;
-import com.egstestmyquizi.demo.repository.QuizRepository;
 import com.egstestmyquizi.demo.service.api.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/quiz")
@@ -19,7 +19,34 @@ public class QuizEndPoint {
 
 
     @PostMapping("/add")
-    public void addQuiz(@RequestBody Quiz quiz){
+    @ResponseStatus(HttpStatus.OK)
+    public void add(@RequestBody Quiz quiz){
         quizService.save(quiz);
+    }
+
+    @GetMapping("/quizzes")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Quiz> findAll() throws QuizNotFoundException {
+        return quizService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Optional<Quiz> findById(@PathVariable("id") Integer id) throws QuizNotFoundException {
+        return quizService.findById(id);
+    }
+
+    @DeleteMapping("delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable("id") Integer id) throws QuizNotFoundException {
+        quizService.deleteById(id);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateName(@PathVariable("id") Integer id, @RequestBody Quiz newQuiz) throws QuizNotFoundException {
+        Optional<Quiz> quiz = quizService.findById(id);
+        quiz.get().setName(newQuiz.getName());
+        quizService.save(quiz.get());
     }
 }

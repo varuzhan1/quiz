@@ -11,10 +11,17 @@ import java.util.Optional;
 
 public interface QuizService {
     void save(Quiz quiz);
+
     Optional<Quiz> findById(Integer id) throws QuizNotFoundException;
+
     List<Quiz> findAll() throws QuizNotFoundException;
+
     List<Question> getQuestionsByCount(Integer quizId, Integer countOfQuestions) throws QuizNotFoundException;
 
     void deleteById(Integer id) throws QuizNotFoundException;
+
+    void addQuestionByQuizId(Integer quizId, Question question);
+
+    void saveAfterDeleteQuestion(Quiz quiz);
 
 }
