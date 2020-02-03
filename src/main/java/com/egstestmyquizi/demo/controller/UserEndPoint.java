@@ -5,7 +5,7 @@ import com.egstestmyquizi.demo.exception.EmptyUsersException;
 import com.egstestmyquizi.demo.exception.UserNotFoundException;
 import com.egstestmyquizi.demo.exception.UserRegistrationException;
 import com.egstestmyquizi.demo.model.dto.JwtAuthenticationRequest;
-import com.egstestmyquizi.demo.model.dto.LeaderBoard;
+import com.egstestmyquizi.demo.model.dto.LeaderBoardDto;
 import com.egstestmyquizi.demo.model.dto.UserDto;
 import com.egstestmyquizi.demo.model.persistence.User;
 import com.egstestmyquizi.demo.security.JwtTokenUtil;
@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -95,7 +94,7 @@ public class UserEndPoint {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/leaderBoard")
-    public List<LeaderBoard> leaderBoard() {
+    public List<LeaderBoardDto> leaderBoard() {
         return userService.leaderBoard();
     }
 

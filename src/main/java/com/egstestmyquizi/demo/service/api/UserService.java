@@ -5,14 +5,12 @@ import com.egstestmyquizi.demo.exception.EmptyUsersException;
 import com.egstestmyquizi.demo.exception.UserNotFoundException;
 import com.egstestmyquizi.demo.exception.UserRegistrationException;
 import com.egstestmyquizi.demo.model.dto.JwtAuthenticationRequest;
-import com.egstestmyquizi.demo.model.dto.LeaderBoard;
+import com.egstestmyquizi.demo.model.dto.LeaderBoardDto;
 import com.egstestmyquizi.demo.model.dto.UserDto;
 import com.egstestmyquizi.demo.model.persistence.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface UserService {
@@ -37,5 +35,5 @@ public interface UserService {
 
     ResponseEntity loginByEmailAndPassword(JwtAuthenticationRequest authenticationRequest) throws UserNotFoundException;
 
-    List<LeaderBoard> leaderBoard();
+    List<LeaderBoardDto> leaderBoard();
 }

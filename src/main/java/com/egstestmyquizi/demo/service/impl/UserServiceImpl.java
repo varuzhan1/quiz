@@ -6,7 +6,7 @@ import com.egstestmyquizi.demo.exception.UserRegistrationException;
 
 import com.egstestmyquizi.demo.model.dto.JwtAuthenticationRequest;
 import com.egstestmyquizi.demo.model.dto.JwtAuthenticationResponse;
-import com.egstestmyquizi.demo.model.dto.LeaderBoard;
+import com.egstestmyquizi.demo.model.dto.LeaderBoardDto;
 import com.egstestmyquizi.demo.model.dto.UserDto;
 import com.egstestmyquizi.demo.model.persistence.Role;
 import com.egstestmyquizi.demo.model.persistence.User;
@@ -183,9 +183,18 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<LeaderBoard> leaderBoard() {
-        List<LeaderBoard> leaderBoard = userRepository.findAllBy(Sort.by(Sort.Direction.DESC, "points"));
-        return leaderBoard;
+    public List<LeaderBoardDto> leaderBoard() {
+        List<User> users = userRepository.findAllBy(Sort.by(Sort.Direction.DESC, "points"));
+        List<LeaderBoardDto> leaderBoardDtos = new ArrayList<>();
+
+        for (int i = 0; i < users.size(); i++){
+            LeaderBoardDto leaderBoardDto = LeaderBoardDto.builder()
+                    .name(users.get(i).getName())
+                    .points(users.get(i).getPoints())
+                    .build();
+            leaderBoardDtos.add(leaderBoardDto);
+        }
+        return leaderBoardDtos;
     }
 
 

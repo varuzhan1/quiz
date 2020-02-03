@@ -51,19 +51,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/delete/{id}").hasAuthority("ADMIN")
                 .antMatchers("/user/delete/{id}").hasAuthority("ADMIN")
                 .antMatchers("/user/**").hasAnyAuthority("ADMIN", "USER")
-                .antMatchers("/question/questions").hasAuthority("ADMIN")
-               // .antMatchers("/quiz/quizzes").permitAll()
-                //.antMatchers("/quiz/{id}").permitAll()
                 .antMatchers("/quiz/**").hasAnyAuthority("ADMIN", "USER")
-
-                //.antMatchers( "/user/delete/{id}").hasAuthority("ADMIN")
-//                .antMatchers(HttpMethod.GET, "/user").hasAuthority("ADMIN")
+                .antMatchers("/question/questions").hasAuthority("ADMIN")
                 .anyRequest().permitAll()
                 .and().logout();
 
         // Custom JWT based security filter
-        http
-                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
         http.headers().cacheControl();
     }
@@ -71,8 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(userDetailsService)
+        auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder);
     }
 
