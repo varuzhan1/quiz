@@ -1,8 +1,15 @@
 package com.egstestmyquizi.demo.model.dto;
 
-public interface LeaderBoard {
 
-    String getUserName();
+import lombok.Builder;
+import lombok.Data;
 
-    Integer getPoints();
+@Data
+@Builder
+public class LeaderBoard {
+
+   private String name;
+   private Integer points;
+
+
 }

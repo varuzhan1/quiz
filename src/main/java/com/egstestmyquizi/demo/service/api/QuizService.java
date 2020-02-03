@@ -10,6 +10,7 @@ import java.util.Optional;
 
 
 public interface QuizService {
+
     void save(Quiz quiz);
 
     Optional<Quiz> findById(Integer id) throws QuizNotFoundException;

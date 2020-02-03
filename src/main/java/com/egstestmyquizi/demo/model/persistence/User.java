@@ -4,6 +4,7 @@ package com.egstestmyquizi.demo.model.persistence;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 
@@ -32,9 +33,9 @@ public class User {
     private String password;
 
     @Column
-    private Integer points = 0;
+    private Integer points;
 
     @Column
     @Enumerated(EnumType.STRING)
-    private Role role = Role.valueOf("ADMIN");
+    private Role role;
 }

@@ -10,13 +10,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-@Slf4j
 public class BaseController {
 
     @ExceptionHandler(UserRegistrationException.class)
     public ResponseEntity<String> handleUnAuthorizedException(UnAuthorizedException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NON_AUTHORITATIVE_INFORMATION);
     }
-
 
 }
