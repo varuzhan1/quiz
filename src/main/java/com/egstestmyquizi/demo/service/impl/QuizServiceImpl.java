@@ -1,9 +1,10 @@
 package com.egstestmyquizi.demo.service.impl;
 
 import com.egstestmyquizi.demo.exception.QuizNotFoundException;
+import com.egstestmyquizi.demo.model.dto.QuestionDto;
+import com.egstestmyquizi.demo.model.dto.QuizDto;
 import com.egstestmyquizi.demo.model.persistence.Question;
 import com.egstestmyquizi.demo.model.persistence.Quiz;
-import com.egstestmyquizi.demo.repository.QuestionRepository;
 import com.egstestmyquizi.demo.repository.QuizRepository;
 import com.egstestmyquizi.demo.service.api.QuestionService;
 import com.egstestmyquizi.demo.service.api.QuizService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +43,21 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     @Transactional
-    public Optional<Quiz> findById(Integer id) throws QuizNotFoundException {
+    public QuizDto findById(Integer id) throws QuizNotFoundException {
+        Optional<Quiz> quiz = quizRepository.findById(id);
+        if (!quiz.isPresent()) {
+            throw new QuizNotFoundException("Quiz not found");
+        }
+        return QuizDto.builder()
+                .id(quiz.get().getId())
+                .name(quiz.get().getName())
+                .questions(convertQuestionListToQuestionDtoList(quiz.get().getQuestions()))
+                .build();
+
+    }
+
+
+    public Optional<Quiz> findQuizById(Integer id) throws QuizNotFoundException {
         Optional<Quiz> quiz = quizRepository.findById(id);
         if (!quiz.isPresent()) {
             throw new QuizNotFoundException("Quiz not found");
@@ -50,12 +66,24 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
-    public List<Quiz> findAll() throws QuizNotFoundException {
+    @Transactional
+    public List<QuizDto> findAll() throws QuizNotFoundException {
         List<Quiz> quizzes = quizRepository.findAll();
+        List<QuizDto> quizDtos = new ArrayList<>();
         if (quizzes.isEmpty()) {
             throw new QuizNotFoundException("Quizzes are not found");
+        } else {
+            for (int i = 0; i < quizzes.size(); i++) {
+                QuizDto quizDto = QuizDto.builder()
+                        .id(quizzes.get(i).getId())
+                        .name(quizzes.get(i).getName())
+                        .questions(convertQuestionListToQuestionDtoList(quizzes.get(i).getQuestions()))
+                        .build();
+                quizDtos.add(quizDto);
+            }
+            return quizDtos;
         }
-        return quizzes;
+
     }
 
     @Override
@@ -89,5 +117,19 @@ public class QuizServiceImpl implements QuizService {
         questions.add(question);
         questionService.saveQuestion(question);
 
+    }
+
+    public List<QuestionDto> convertQuestionListToQuestionDtoList(List<Question> questions){
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        for (int i = 0; i < questions.size(); i++) {
+            QuestionDto questionDto = QuestionDto.builder()
+                    .id(questions.get(i).getId())
+                    .question(questions.get(i).getQuestion())
+                    .point(questions.get(i).getPoint())
+                    .answers(questions.get(i).getAnswers())
+                    .build();
+            questionDtos.add(questionDto);
+        }
+        return questionDtos;
     }
 }

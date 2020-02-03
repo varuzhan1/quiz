@@ -43,16 +43,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/quiz/**").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/question/**").permitAll()
-                .antMatchers("/user/**").permitAll()
+                //.antMatchers("/question/**").hasAuthority("ADMIN")
+                .antMatchers("/user/register").permitAll()
+                .antMatchers("/user/login").permitAll()
+                .antMatchers("/user/users").hasAuthority("ADMIN")
+                .antMatchers("/user/{id}").hasAuthority("ADMIN")
+                .antMatchers("/user/delete/{id}").hasAuthority("ADMIN")
+                .antMatchers("/user/delete/{id}").hasAuthority("ADMIN")
+                .antMatchers("/user/**").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers("/question/questions").hasAuthority("ADMIN")
                // .antMatchers("/quiz/quizzes").permitAll()
                 //.antMatchers("/quiz/{id}").permitAll()
-                //.antMatchers("/quiz/**").hasAnyAuthority("ADMIN", "USER")
-//                .antMatchers(HttpMethod.DELETE, "/user/{id}").hasAuthority("ADMIN")
+                .antMatchers("/quiz/**").hasAnyAuthority("ADMIN", "USER")
+
+                //.antMatchers( "/user/delete/{id}").hasAuthority("ADMIN")
 //                .antMatchers(HttpMethod.GET, "/user").hasAuthority("ADMIN")
-                .anyRequest().permitAll();
+                .anyRequest().permitAll()
+                .and().logout();
 
         // Custom JWT based security filter
         http

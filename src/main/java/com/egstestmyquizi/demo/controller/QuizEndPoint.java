@@ -1,6 +1,7 @@
 package com.egstestmyquizi.demo.controller;
 
 import com.egstestmyquizi.demo.exception.QuizNotFoundException;
+import com.egstestmyquizi.demo.model.dto.QuizDto;
 import com.egstestmyquizi.demo.model.persistence.Quiz;
 import com.egstestmyquizi.demo.service.api.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +27,13 @@ public class QuizEndPoint {
 
     @GetMapping("/quizzes")
     @ResponseStatus(HttpStatus.OK)
-    public List<Quiz> findAll() throws QuizNotFoundException {
+    public List<QuizDto> findAll() throws QuizNotFoundException {
         return quizService.findAll();
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Quiz> findById(@PathVariable("id") Integer id) throws QuizNotFoundException {
+    public QuizDto findById(@PathVariable("id") Integer id) throws QuizNotFoundException {
         return quizService.findById(id);
     }
 
@@ -45,7 +46,7 @@ public class QuizEndPoint {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void updateName(@PathVariable("id") Integer id, @RequestBody Quiz newQuiz) throws QuizNotFoundException {
-        Optional<Quiz> quiz = quizService.findById(id);
+        Optional<Quiz> quiz = quizService.findQuizById(id);
         quiz.get().setName(newQuiz.getName());
         quizService.save(quiz.get());
     }

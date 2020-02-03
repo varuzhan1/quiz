@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,22 +75,46 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public List<User> findAll() throws EmptyUsersException {
+    public List<UserDto> findAll() throws EmptyUsersException {
         List<User> users = userRepository.findAll();
+        List<UserDto> userDtos = new ArrayList<>();
         if (users.isEmpty()) {
             throw new EmptyUsersException("There is no users!");
+        } else {
+            for (int i = 0; i < users.size(); i++) {
+                UserDto userDto = UserDto.builder()
+                        .id(users.get(i).getId())
+                        .name(users.get(i).getName())
+                        .surname(users.get(i).getSurName())
+                        .email(users.get(i).getEmail())
+                        .role(users.get(i).getRole())
+                        .build();
+                userDtos.add(userDto);
+            }
+            return userDtos;
         }
-        return users;
     }
 
     @Override
     @Transactional
-    public Optional<User> findById(Integer id) throws UserNotFoundException {
+    public UserDto findById(Integer id) throws UserNotFoundException {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
             throw new UserNotFoundException("User not found");
+        } else {
+
+                UserDto userDto = UserDto.builder()
+                        .id(user.get().getId())
+                        .name(user.get().getName())
+                        .surname(user.get().getSurName())
+                        .email(user.get().getEmail())
+                        .role(user.get().getRole())
+                        .build();
+
+
+            return userDto;
         }
-        return userRepository.findById(id);
+
     }
 
     @Override
@@ -130,7 +155,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new UserNotFoundException("User not found");
         }
-        user.setSurName(name);
+        user.setName(name);
         userRepository.save(user);
     }
 
@@ -155,7 +180,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
-
 
 
     @Override

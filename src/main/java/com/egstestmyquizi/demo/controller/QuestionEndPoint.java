@@ -1,6 +1,7 @@
 package com.egstestmyquizi.demo.controller;
 
 import com.egstestmyquizi.demo.exception.QuizNotFoundException;
+import com.egstestmyquizi.demo.model.dto.QuestionDto;
 import com.egstestmyquizi.demo.model.persistence.Question;
 import com.egstestmyquizi.demo.service.api.AnswerService;
 import com.egstestmyquizi.demo.service.api.QuestionService;
@@ -8,6 +9,8 @@ import com.egstestmyquizi.demo.service.api.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/question")
@@ -42,8 +45,14 @@ public class QuestionEndPoint {
     }
 
     @GetMapping("/{id}")
-    public Question findById(@PathVariable("id") Integer id) {
+    @ResponseStatus(HttpStatus.OK)
+    public QuestionDto findById(@PathVariable("id") Integer id) {
         return questionService.findById(id);
+    }
+
+    @GetMapping("/questions")
+    public List<QuestionDto> findAll(){
+        return questionService.findAll();
     }
 
 }

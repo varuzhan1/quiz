@@ -2,6 +2,7 @@ package com.egstestmyquizi.demo.service.impl;
 
 
 import com.egstestmyquizi.demo.exception.QuizNotFoundException;
+import com.egstestmyquizi.demo.model.dto.QuestionDto;
 import com.egstestmyquizi.demo.model.persistence.Answer;
 import com.egstestmyquizi.demo.model.persistence.Question;
 import com.egstestmyquizi.demo.model.persistence.Quiz;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,15 +51,31 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional
-    public List<Question> findAll() {
-
-        return questionRepository.findAll();
+    public List<QuestionDto> findAll() {
+        List<Question> questions = questionRepository.findAll();
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        for (int i = 0; i < questions.size(); i++) {
+            QuestionDto questionDto = QuestionDto.builder()
+                    .id(questions.get(i).getId())
+                    .question(questions.get(i).getQuestion())
+                    .point(questions.get(i).getPoint())
+                    .answers(questions.get(i).getAnswers())
+                    .build();
+            questionDtos.add(questionDto);
+        }
+        return questionDtos;
     }
 
     @Override
     @Transactional
-    public Question findById(Integer id) {
-        return questionRepository.findById(id).get();
+    public QuestionDto findById(Integer id) {
+        Question question = questionRepository.findById(id).get();
+        return QuestionDto.builder()
+                .id(question.getId())
+                .question(question.getQuestion())
+                .point(question.getPoint())
+                .answers(question.getAnswers())
+                .build();
     }
 
     @Override
@@ -71,13 +89,13 @@ public class QuestionServiceImpl implements QuestionService {
     public void updateById(Integer id, Question newQuestion) {
         Question question = questionRepository.findById(id).get();
 
-        if(newQuestion.getQuestion() != null) {
+        if (newQuestion.getQuestion() != null) {
             question.setQuestion(newQuestion.getQuestion());
         }
-        if(newQuestion.getPoint() != null) {
+        if (newQuestion.getPoint() != null) {
             question.setPoint(newQuestion.getPoint());
         }
-        if(newQuestion.getCorrectAnswer() != null) {
+        if (newQuestion.getCorrectAnswer() != null) {
             question.setCorrectAnswer(newQuestion.getCorrectAnswer());
         }
         questionRepository.save(question);
@@ -88,7 +106,7 @@ public class QuestionServiceImpl implements QuestionService {
     public void deleteById(Integer id) {
         Optional<Question> question = questionRepository.findById(id);
         questionRepository.deleteById(id);
-        for (int i = 0; i < question.get().getAnswers().size(); i++){
+        for (int i = 0; i < question.get().getAnswers().size(); i++) {
             answerService.deleteById(question.get().getAnswers().get(i).getId());
         }
     }
@@ -97,7 +115,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     @Transactional
     public void deleteByQuizId(Integer quizId, Integer questionId) throws QuizNotFoundException {
-        Optional<Quiz> quiz = quizService.findById(quizId);
+        Optional<Quiz> quiz = quizService.findQuizById(quizId);
         Optional<Question> question = questionRepository.findById(questionId);
         quiz.get().getQuestions().remove(question.get());
         quizService.saveAfterDeleteQuestion(quiz.get());
