@@ -33,6 +33,7 @@ public interface UserService {
 
     void updatePassword(String email, String newPassword) throws UserNotFoundException;
 
+    void updatePoints(String email, int points) throws UserNotFoundException;
     ResponseEntity loginByEmailAndPassword(JwtAuthenticationRequest authenticationRequest) throws UserNotFoundException;
 
     List<LeaderBoardDto> leaderBoard();

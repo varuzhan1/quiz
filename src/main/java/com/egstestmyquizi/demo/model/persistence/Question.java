@@ -27,6 +27,7 @@ public class Question {
     @OneToMany
     private   List<Answer> answers;
 
+    @Column
     private String correct;
 
 }

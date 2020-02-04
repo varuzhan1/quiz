@@ -1,11 +1,15 @@
 package com.egstestmyquizi.demo.controller;
 
 import com.egstestmyquizi.demo.exception.QuizNotFoundException;
+import com.egstestmyquizi.demo.exception.UserNotFoundException;
+import com.egstestmyquizi.demo.model.dto.JwtAuthenticationRequestWithQuestion;
 import com.egstestmyquizi.demo.model.dto.QuestionDto;
 import com.egstestmyquizi.demo.model.persistence.Question;
+import com.egstestmyquizi.demo.model.persistence.User;
 import com.egstestmyquizi.demo.service.api.AnswerService;
 import com.egstestmyquizi.demo.service.api.QuestionService;
 import com.egstestmyquizi.demo.service.api.QuizService;
+import com.egstestmyquizi.demo.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +28,9 @@ public class QuestionEndPoint {
 
     @Autowired
     AnswerService answerService;
+
+    @Autowired
+    UserService userService;
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/add/{quiz_id}")
@@ -51,16 +58,23 @@ public class QuestionEndPoint {
     }
 
     @GetMapping("/questions")
-    public List<QuestionDto> findAll(){
+    public List<QuestionDto> findAll() {
         return questionService.findAll();
     }
 
     @PostMapping("/checkAnswer")
     @ResponseStatus(HttpStatus.OK)
-    public boolean checkIsAnswerCorrect(@RequestBody Question answeredQuestion){
-        Question question = questionService.findByQuestion(answeredQuestion.getQuestion()).get();
-        if(answeredQuestion.getCorrect().equals(question.getCorrect())){
-
+    public boolean checkIsAnswerCorrect(@RequestBody JwtAuthenticationRequestWithQuestion jwtAuthenticationRequestWithQuestion) throws UserNotFoundException {
+        Question question = questionService.findByQuestion(jwtAuthenticationRequestWithQuestion.getQuestion().getQuestion()).get();
+        if (jwtAuthenticationRequestWithQuestion.getQuestion().getCorrect().equals(question.getCorrect())) {
+            if (jwtAuthenticationRequestWithQuestion.getJwt() != null) {
+                if (jwtAuthenticationRequestWithQuestion.getJwt().getEmail() != null) {
+                    User user = userService.findByEmail(jwtAuthenticationRequestWithQuestion.getJwt().getEmail());
+                    int userPoints = user.getPoints();
+                    userPoints += question.getPoint();
+                    userService.updatePoints(jwtAuthenticationRequestWithQuestion.getJwt().getEmail(), userPoints);
+                }
+            }
             return true;
         } else {
             return false;

@@ -181,6 +181,15 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public void updatePoints(String email, int points) throws UserNotFoundException {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        user.setPoints(points);
+        userRepository.save(user);
+    }
 
     @Override
     public List<LeaderBoardDto> leaderBoard() {
