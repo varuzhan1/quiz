@@ -27,7 +27,6 @@ public class Question {
     @OneToMany
     private   List<Answer> answers;
 
-    @OneToOne
-    private Answer correctAnswer;
+    private String correct;
 
 }

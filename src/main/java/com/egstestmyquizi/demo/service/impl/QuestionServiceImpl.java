@@ -78,10 +78,23 @@ public class QuestionServiceImpl implements QuestionService {
                 .build();
     }
 
+    public Optional<Question> findQuestionById(Integer id){
+        Optional<Question> question = questionRepository.findById(id);
+//        if (!question.isPresent()) {
+//            throw new QuizNotFoundException("Quiz not found");
+//        }
+        return question;
+    }
+
     @Override
     @Transactional
     public Page<Question> findByPage(Integer page, Integer size) {
         return questionRepository.findAll(PageRequest.of(page, size));
+    }
+
+    @Override
+    public Optional<Question> findByQuestion(String question) {
+        return questionRepository.findByQuestion(question);
     }
 
     @Override
@@ -95,8 +108,8 @@ public class QuestionServiceImpl implements QuestionService {
         if (newQuestion.getPoint() != null) {
             question.setPoint(newQuestion.getPoint());
         }
-        if (newQuestion.getCorrectAnswer() != null) {
-            question.setCorrectAnswer(newQuestion.getCorrectAnswer());
+        if (newQuestion.getCorrect() != null) {
+            question.setCorrect(newQuestion.getCorrect());
         }
         questionRepository.save(question);
     }

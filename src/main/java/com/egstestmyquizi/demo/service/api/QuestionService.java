@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface QuestionService {
 
@@ -18,7 +19,11 @@ public interface QuestionService {
 
     QuestionDto findById(Integer id);
 
+    Optional<Question> findQuestionById(Integer id);
+
     Page<Question> findByPage(Integer page, Integer size);
+
+    Optional<Question> findByQuestion(String question);
 
    // public void saveWithAnswer(Question question, List<Answer> answers);
 

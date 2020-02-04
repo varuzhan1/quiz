@@ -55,4 +55,16 @@ public class QuestionEndPoint {
         return questionService.findAll();
     }
 
+    @PostMapping("/checkAnswer")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean checkIsAnswerCorrect(@RequestBody Question answeredQuestion){
+        Question question = questionService.findByQuestion(answeredQuestion.getQuestion()).get();
+        if(answeredQuestion.getCorrect().equals(question.getCorrect())){
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

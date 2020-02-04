@@ -21,7 +21,7 @@ public class QuizEndPoint {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.OK)
-    public void add(@RequestBody Quiz quiz){
+    public void add(@RequestBody Quiz quiz) {
         quizService.save(quiz);
     }
 

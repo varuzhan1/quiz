@@ -22,4 +22,12 @@ public class Answer {
     @Column
     String answer;
 
+//    public boolean equals(Answer answer){
+//        if(this.answer.equals(answer)){
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+
 }

@@ -53,6 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/**").hasAnyAuthority("ADMIN", "USER")
                 .antMatchers("/quiz/**").hasAnyAuthority("ADMIN", "USER")
                 .antMatchers("/question/questions").hasAuthority("ADMIN")
+                .antMatchers("/question/checkAnswer").hasAnyAuthority("ADMIN", "USER")
                 .anyRequest().permitAll()
                 .and().logout();
 
