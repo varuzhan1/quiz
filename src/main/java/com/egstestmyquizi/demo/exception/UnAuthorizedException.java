@@ -1,6 +1,6 @@
 package com.egstestmyquizi.demo.exception;
 
-public class UnAuthorizedException extends RuntimeException {
+public class UnAuthorizedException extends Exception {
 
     public UnAuthorizedException() {
         super();

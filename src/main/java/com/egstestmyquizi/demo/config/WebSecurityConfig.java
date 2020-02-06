@@ -54,6 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/quiz/**").hasAnyAuthority("ADMIN", "USER")
                 .antMatchers("/question/questions").hasAuthority("ADMIN")
                 .antMatchers("question/checkAnswer").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers("question/checkAnswer").permitAll()
                 .anyRequest().permitAll()
                 .and().logout();
 
@@ -79,6 +80,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
         return new JwtAuthenticationTokenFilter();
     }
-
 
 }

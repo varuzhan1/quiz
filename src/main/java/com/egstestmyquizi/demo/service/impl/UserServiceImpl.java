@@ -145,7 +145,6 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("User not found");
         }
         user.setEmail(newEmail);
-        userRepository.save(user);
     }
 
     @Override
@@ -156,7 +155,6 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("User not found");
         }
         user.setName(name);
-        userRepository.save(user);
     }
 
     @Override
@@ -167,7 +165,6 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("User not found");
         }
         user.setSurName(surName);
-        userRepository.save(user);
     }
 
     @Override
@@ -178,17 +175,17 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("User not found");
         }
         user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+
     }
 
     @Override
+    @Transactional
     public void updatePoints(String email, int points) throws UserNotFoundException {
         User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User not found");
         }
         user.setPoints(points);
-        userRepository.save(user);
     }
 
     @Override

@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(name = "answer")
+
+
 @Entity
+@Table(name = "answer")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
